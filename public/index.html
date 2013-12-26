@@ -1,0 +1,178 @@
+<!doctype html>
+<html>
+  <head>
+    <link href="http://vjs.zencdn.net/4.1.0/video-js.css" rel="stylesheet">
+    <script src="http://vjs.zencdn.net/4.1.0/video.js"></script>
+     <link href="https://netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.css" rel="stylesheet"> 
+
+    <style>
+      .vjs-control.vjs-heat-button:before{
+        font-family: FontAwesome;
+        content: "\f123";
+
+      }
+      .vjs-control.vjs-upvote-button:before {
+        font-family: FontAwesome;
+        content: "\f087";
+      }
+      .vjs-control.vjs-downvote-button:before {
+        font-family: FontAwesome;
+        content: "\f088";
+      }
+      .vjs-heatmap {
+        font-family: FontAwesome;
+        display: block;
+        background-image: url("http://i.stack.imgur.com/9Ve6P.png");
+        background-repeat: no-repeat;
+        background-size: 100%;
+        height: 10px !important;
+        width: 100% !important;
+      }
+      .vjs-default-skin .vjs-control-bar {
+        height: 4em !important;
+      }
+
+      </style>
+  </head>  
+  <body>
+    <h1>HeatVote</h1>
+    <video id="example_video_1" class="video-js vjs-default-skin" width="640" height="480" controls>
+      <source type="video/mp4" src="http://video-js.zencoder.com/oceans-clip.mp4">
+      <source type="video/webm" src="http://video-js.zencoder.com/oceans-clip.webm">
+    </video>
+    <script>
+      videojs.Heatmap = videojs.Button.extend({
+        init: function(player, options){
+          videojs.Button.call(this, player, options);
+        }
+      });
+
+      videojs.Heat = videojs.Button.extend({
+      /** @constructor */
+        init: function(player, options){
+          videojs.Button.call(this, player, options);
+          this.on('click', this.onClick);
+        }
+      });
+
+
+      videojs.Heat.prototype.onClick = function() {
+        alert("HEATMAP");
+      //var myDiv = document.getElementsByClassName('vjs-control-bar');
+        //myDiv[0].insertBefore('<hr>');
+        //this.controlBar.el().insertBefore(heatmap.el(), this.controlBar.el().childNodes[0]);
+      };
+
+      videojs.Upvote = videojs.Button.extend({
+      /** @constructor */
+        init: function(player, options){
+          videojs.Button.call(this, player, options);
+          this.on('click', this.onClick, this);
+        }
+      });
+
+      videojs.Upvote.prototype.onClick = function() {
+        console.log("You upvoted at", vid.currentTime(), "and the total video length is", vid.duration());
+      };
+
+      videojs.Downvote = videojs.Button.extend({
+      /** @constructor */
+        init: function(player, options){
+          videojs.Button.call(this, player, options);
+          this.on('click', this.onClick);
+        }
+      });
+
+      videojs.Downvote.prototype.onClick = function() {
+        console.log("You downvoted at", vid.currentTime(), "and the total video length is", vid.duration());
+      };
+      // Note that we're not doing this in prototype.createEl() because
+      // it won't be called by Component.init (due to name obfuscation).
+      //Here I create the buttons
+      //tabIndex determines whether the button is highlighted when tabbing
+      //role creates an html5 attribute, doesn't do much
+      var createHeatmap = function() {
+        var props = {
+            className: 'vjs-heatmap vjs-control',
+            innerHTML: '<div class="vjs-control-content"><span class="vjs-control-text">' + ('Heat') + '</span></div>',
+            role: 'button',
+            'aria-live': 'polite', // let the screen reader user know that the text of the button may change
+            tabIndex: 0
+          };
+        return videojs.Component.prototype.createEl(null, props);
+      };
+
+      var createHeatButton = function() {
+        var props = {
+            className: 'vjs-heat-button vjs-control',
+            innerHTML: '<div class="vjs-control-content"><span class="vjs-control-text">' + ('Heat') + '</span></div>',
+            role: 'button',
+            'aria-live': 'polite', // let the screen reader user know that the text of the button may change
+            tabIndex: 0
+          };
+        return videojs.Component.prototype.createEl(null, props);
+      };
+
+      var createUpButton = function() {
+        var props = {
+            className: 'vjs-upvote-button vjs-control',
+            innerHTML: '<div class="vjs-control-content"><span class="vjs-control-text">' + ('Up') + '</span></div>',
+            role: 'button',
+            'aria-live': 'polite', // let the screen reader user know that the text of the button may change
+            tabIndex: 1
+          };
+        return videojs.Component.prototype.createEl(null, props);
+      };
+
+
+      var createDownButton = function() {
+        var props = {
+            className: 'vjs-downvote-button vjs-control',
+            innerHTML: '<div class="vjs-control-content"><span class="vjs-control-text">' + ('Down') + '</span></div>',
+            role: 'button',
+            'aria-live': 'polite', // let the screen reader user know that the text of the button may change
+            tabIndex: 2
+          };
+        return videojs.Component.prototype.createEl(null, props);
+      };
+
+      //Here I create the plugins
+      videojs.plugin('heatmap', function() {
+        var options = { 'el' : createHeatmap() };
+        var heatmap = new videojs.Heatmap(this, options);
+
+        //var heatMapWithBR = heatmap.el().appendChild('<br>');
+        //var breakRule = document.createElement('br');
+        //console.log(breakRule);
+
+        //this.controlBar.el().insertBefore(breakRule, this.controlBar.el().childNodes[0]);
+        //this.controlBar.el().insertBefore(breakRule, this.controlBar.el().childNodes[0]);
+        this.controlBar.el().insertBefore(heatmap.el(), this.controlBar.el().childNodes[0]);
+      });
+      videojs.plugin('heat', function() {
+        var options = { 'el' : createHeatButton() };
+        var heat = new videojs.Heat(this, options);
+        this.controlBar.el().appendChild(heat.el());
+      });
+      videojs.plugin('up', function() {
+        var options = { 'el' : createUpButton() };
+        var up = new videojs.Upvote(this, options);
+        this.controlBar.el().appendChild(up.el());
+      });
+      videojs.plugin('down', function() {
+        var options = { 'el' : createDownButton() };
+        var down = new videojs.Downvote(this, options);
+        this.controlBar.el().appendChild(down.el());
+      });
+      //Here I add the plugins to the video player
+      var vid = videojs("example_video_1", {
+        plugins : { heat : {}, up: {}, down: {}, heatmap: {} }
+      });
+
+
+    </script>
+  </body>
+</html>
+
+
+<!-- $('.vjs-control-bar').prepend('<hr>'); -->
