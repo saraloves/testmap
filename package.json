@@ -1,0 +1,20 @@
+{
+  "name": "testmap",
+  "version": "0.0.1",
+  "description": "Voting system used on videos to track positive or negative votes on exact moments of the video and generates relevant information about it.",
+  "private": true,
+  "main": "web.js",
+  "scripts": {
+    "start": "node web.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/saraloves/testmap.git"
+  },
+  "author": "Sara Binns <sarabinns@gmail.com>, Lindsey Smith <lindsey.engineer@gmail.com>, Joao Stein <joaosteing@gmail.com>",
+  "license": "BSD-2-Clause",
+  "homepage": "https://github.com/saraloves/videoheatmap",
+  "dependencies": {
+    "express": "~3.4.7",
+  }
+}
